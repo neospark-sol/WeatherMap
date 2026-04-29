@@ -7,7 +7,7 @@ export function Settings() {
       <section className="hero" style={{ paddingBottom: 12 }}>
         <div className="label">Settings</div>
         <div className="icon-big">⚙️</div>
-        <div className="cond">Skyline AU</div>
+        <div className="cond">WeatherMap</div>
         <div className="range">v0.1</div>
       </section>
       <section className="card">

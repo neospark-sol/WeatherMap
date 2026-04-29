@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icon-192.png', 'icon-512.png', 'apple-icon-180.png'],
       manifest: {
-        name: 'Skyline AU — Weather',
-        short_name: 'Skyline',
-        description: 'Australian weather forecasts and warnings',
+        name: 'WeatherMap',
+        short_name: 'WeatherMap',
+        description: 'Global weather forecasts, radar, and official warnings',
         theme_color: '#0b1020',
         background_color: '#0b1020',
         display: 'standalone',

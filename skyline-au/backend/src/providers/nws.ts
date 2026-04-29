@@ -14,7 +14,7 @@ export async function getNwsActiveAlerts(lat: number, lon: number): Promise<Warn
   const url = `https://api.weather.gov/alerts/active?status=actual&point=${encodeURIComponent(`${lat},${lon}`)}`;
   const { body, statusCode } = await request(url, {
     headers: {
-      'User-Agent': process.env.NWS_USER_AGENT ?? 'SkylineAU/1.0 (contact@example.com)',
+      'User-Agent': process.env.NWS_USER_AGENT ?? 'WeatherMap/1.0 (contact@example.com)',
       Accept: 'application/geo+json'
     },
     headersTimeout: 12000,

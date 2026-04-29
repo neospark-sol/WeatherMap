@@ -31,7 +31,7 @@ export const bomProvider = {
     try {
       const { body, statusCode } = await request(url, {
         // BOM: identify your app + contact — https://reg.bom.gov.au/other/copyright.shtml
-        headers: { 'User-Agent': 'SkylineAU/1.0 (you@yourdomain.com)' },
+        headers: { 'User-Agent': 'WeatherMap/1.0 (you@yourdomain.com)' },
         headersTimeout: 8000,
         bodyTimeout: 8000
       });

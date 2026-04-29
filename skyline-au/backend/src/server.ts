@@ -130,5 +130,5 @@ if (fs.existsSync(staticDir)) {
 
 const port = Number(process.env.PORT ?? 8787);
 app.listen(port, () =>
-  console.log(`[skyline] http://localhost:${port} provider=${process.env.PROVIDER ?? 'live'} static=${fs.existsSync(staticDir)}`)
+  console.log(`[weathermap] http://localhost:${port} provider=${process.env.PROVIDER ?? 'live'} static=${fs.existsSync(staticDir)}`)
 );

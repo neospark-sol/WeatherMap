@@ -1,55 +1,30 @@
-# Skyline AU — Weather PWA
+# WeatherMap
 
-Mobile-first Australian weather app: React + Vite + TypeScript PWA, Express backend adapter (Open-Meteo + BOM warnings, with mock fallback). UI matches the Skyline prototype: hero, stats, hourly strip, Chart.js tabs, 7-day rows, warnings, saved locations, install banner, PWA shell. The app always loads **live** forecast and warning data from your backend when `PROVIDER=live`.
+Mobile-first weather PWA: React + Vite + TypeScript, Express backend (Open‑Meteo forecasts, AU BoM warnings XML, US NWS alerts, RainViewer radar in the client). Installable PWA with offline caching for shell and API.
 
-## Local development
+## Run locally
 
-```bash
-cd backend && cp .env.example .env && npm install && npm run dev
-# other terminal:
-cd frontend && npm install && npm run dev
-```
-
-Open http://localhost:5173 (Vite proxies `/api` to :8787).
-
-## Production (single process)
-
-Build frontend and backend from the repo root `skyline-au/`:
+From `skyline-au/`:
 
 ```bash
-cd backend && npm ci && npm run build
-cd ../frontend && npm ci && npm run build
-cd .. && PORT=8080 node backend/dist/server.js
+cd backend && npm ci && cp .env.example .env && npm run dev   # port 8787
+cd frontend && npm ci && npm run dev    # port 5173, proxies /api → 8787
 ```
 
-Serves the SPA from `frontend/dist` and APIs under `/api/*`.
+Set `PROVIDER=live` (default in Docker) for real data. Use `PROVIDER=mock` only for offline UI tests.
 
-## Railway
+## Deploy (Docker / Railway)
 
-1. Install CLI and log in: https://docs.railway.com/develop/cli
-2. From `skyline-au/`: `railway link` (create or select a project).
-3. Deploy: `railway up` **or** connect the GitHub repo and set **Dockerfile** build.
+1. Repo root for the container is this directory (`skyline-au/`): `Dockerfile` builds backend + frontend static.
+2. Railway: set **Root Directory** to `skyline-au` if the Git monorepo root is above this folder.
+3. Health check: `GET /api/health`
+4. Optional env: `PORT`, `PROVIDER`, `NOMINATIM_USER_AGENT`, `NWS_USER_AGENT`, BOM contact in code or custom proxy.
 
-Recommended variables:
+## Data sources
 
-| Variable | Example | Notes |
-|----------|---------|--------|
-| `PORT` | (Railway default) | Server listens on `$PORT` |
-| `PROVIDER` | `live` | Use `mock` if you want zero external calls |
-| `CACHE_TTL_*` | see `.env.example` | Optional |
+- Forecast & geocoding: Open‑Meteo  
+- AU warnings: Bureau of Meteorology product XML (`fwo/IDZ…`)  
+- US alerts: api.weather.gov  
+- Radar mosaic (browser): RainViewer public API  
 
-Health check: `GET /api/health`
-
-Update the BOM `User-Agent` in `backend/src/providers/bom.ts` with your contact details before high-volume use.
-
-## Regenerating PWA icons (optional)
-
-```bash
-cd frontend && npx --yes pwa-asset-generator public/favicon.svg public --background "#0b1020" --icon-only
-cp public/manifest-icon-192.png public/icon-192.png
-cp public/manifest-icon-512.png public/icon-512.png
-```
-
-## Licence
-
-Data: Open-Meteo (forecast), Bureau of Meteorology (public warnings). Not affiliated with Weatherzone.
+Not affiliated with third-party weather brands.

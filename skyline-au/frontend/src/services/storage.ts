@@ -1,7 +1,7 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import type { Location } from '../types';
 
-const DB_NAME = 'skyline-au';
+const DB_NAME = 'weathermap-v1';
 const DB_VERSION = 1;
 
 let dbp: Promise<IDBPDatabase> | null = null;

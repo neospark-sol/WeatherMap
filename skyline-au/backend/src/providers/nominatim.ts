@@ -9,7 +9,7 @@ export async function nominatimReverse(lat: number, lon: number): Promise<Locati
   const url = `https://nominatim.openstreetmap.org/reverse?lat=${encodeURIComponent(String(lat))}&lon=${encodeURIComponent(String(lon))}&format=json&addressdetails=1`;
   const { body, statusCode } = await request(url, {
     headers: {
-      'User-Agent': process.env.NOMINATIM_USER_AGENT ?? 'SkylineAU/1.0 (contact@example.com)'
+      'User-Agent': process.env.NOMINATIM_USER_AGENT ?? 'WeatherMap/1.0 (contact@example.com)'
     },
     headersTimeout: 10000,
     bodyTimeout: 10000

@@ -45,10 +45,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
 
       if (typeof sessionStorage === 'undefined') return;
-      if (sessionStorage.getItem('skyline-geo-attempted') === '1') return;
+      if (sessionStorage.getItem('weathermap-geo-attempted') === '1') return;
       if (typeof navigator === 'undefined' || !navigator.geolocation) return;
 
-      sessionStorage.setItem('skyline-geo-attempted', '1');
+      sessionStorage.setItem('weathermap-geo-attempted', '1');
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           if (cancelled) return;

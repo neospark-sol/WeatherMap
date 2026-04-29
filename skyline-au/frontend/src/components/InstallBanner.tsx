@@ -22,7 +22,7 @@ export function InstallBanner() {
     <div className="install show">
       <div className="ico">⛅</div>
       <div className="info">
-        <div className="t">Install Skyline AU</div>
+        <div className="t">Install WeatherMap</div>
         <div className="s">Get fast access from your home screen</div>
       </div>
       <button
