@@ -1,0 +1,66 @@
+<mxfile host="app.diagrams.net" modified="2026-04-29T00:00:00.000Z" agent="Cursor" version="22.1.0" type="device">
+  <diagram id="workflow" name="Reverse-engineer → PWA">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="980" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="Reverse-engineer → build → ship (PWA on Railway)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#E8ECF2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="760" height="36" as="geometry" />
+        </mxCell>
+
+        <mxCell id="step1" value="Step 1 — Parallel specification (same intent, two sources)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=2;fontColor=#8B96A8;letterSpacing=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="58" width="760" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="perplexity" value="&lt;b&gt;Perplexity&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#8B96A8&quot;&gt;Architecture &amp; functional specs&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;• Describe app to reverse-engineer&lt;br&gt;• Collect architecture + functional documents&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#152A30;strokeColor=#20B8CD;strokeWidth=2;fontColor=#E8ECF2;arcSize=6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="92" width="340" height="118" as="geometry" />
+        </mxCell>
+
+        <mxCell id="janus" value="&lt;b&gt;Janus Park&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#8B96A8&quot;&gt;Specs + implementation plan for an AI builder&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;• Functional specifications&lt;br&gt;• Technical specifications&lt;br&gt;• Implementation plan&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#251E35;strokeColor=#A78BFA;strokeWidth=2;fontColor=#E8ECF2;arcSize=6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="420" y="92" width="380" height="118" as="geometry" />
+        </mxCell>
+
+        <mxCell id="mergeNote" value="Combined artifact pack" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=2;fontColor=#8B96A8;" vertex="1" parent="1">
+          <mxGeometry x="320" y="218" width="200" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="genspark" value="&lt;b&gt;GenSpark — AI chat&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#8B96A8&quot;&gt;Model: Opus 4.7 — build from full pack&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;• Load Perplexity + Janus outputs&lt;br&gt;• Generate codebase per implementation plan&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2D2310;strokeColor=#F59E0B;strokeWidth=2;fontColor=#E8ECF2;arcSize=6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="248" width="460" height="108" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cursor" value="&lt;b&gt;Cursor&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Import GenSpark output — stitch, fix gaps, run app locally&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0F2430;strokeColor=#38BDF8;strokeWidth=2;fontColor=#E8ECF2;arcSize=6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="388" width="460" height="76" as="geometry" />
+        </mxCell>
+
+        <mxCell id="railway" value="&lt;b&gt;Railway.com&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Deploy — public HTTPS URL to share&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#142818;strokeColor=#86EFAC;strokeWidth=2;fontColor=#E8ECF2;arcSize=6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="496" width="460" height="72" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pwa" value="&lt;b&gt;Outcome — Progressive Web App (PWA)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Users install from browser on mobile · share link · no app-store gate&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot; color=&quot;#8B96A8&quot;&gt;manifest + service worker · add to home screen&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#301828;strokeColor=#F472B6;strokeWidth=2;fontColor=#E8ECF2;arcSize=6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="600" width="460" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e-p-g" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B7A8E;endArrow=block;endFill=1;" edge="1" parent="1" source="perplexity" target="genspark">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e-j-g" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B7A8E;endArrow=block;endFill=1;" edge="1" parent="1" source="janus" target="genspark">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e-g-c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B7A8E;endArrow=block;endFill=1;" edge="1" parent="1" source="genspark" target="cursor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e-c-r" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B7A8E;endArrow=block;endFill=1;" edge="1" parent="1" source="cursor" target="railway">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e-r-p" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B7A8E;endArrow=block;endFill=1;" edge="1" parent="1" source="railway" target="pwa">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
