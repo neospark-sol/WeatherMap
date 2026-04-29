@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './app/AppContext';
 import { Header } from './components/Header';
@@ -7,10 +7,14 @@ import { Home } from './pages/Home';
 import { Warnings } from './pages/Warnings';
 import { Saved } from './pages/Saved';
 import { Settings } from './pages/Settings';
-import { Radar } from './pages/Radar';
 import { LocationSheet } from './components/LocationSheet';
 import { InstallBanner } from './components/InstallBanner';
 import './styles.css';
+
+const Radar = lazy(async () => {
+  const m = await import('./pages/Radar');
+  return { default: m.Radar };
+});
 
 function Shell() {
   const [sheet, setSheet] = useState(false);
@@ -31,7 +35,21 @@ function Shell() {
       <main>
         <Routes>
           <Route path="/" element={<Home refreshKey={refreshKey} setMood={setMood} />} />
-          <Route path="/radar" element={<Radar />} />
+          <Route
+            path="/radar"
+            element={
+              <Suspense
+                fallback={
+                  <div className="state fade-in" style={{ padding: '48px 24px' }}>
+                    <div className="big">🛰️</div>
+                    <div className="ttl">Loading radar…</div>
+                  </div>
+                }
+              >
+                <Radar />
+              </Suspense>
+            }
+          />
           <Route path="/warnings" element={<Warnings refreshKey={refreshKey} />} />
           <Route path="/saved" element={<Saved />} />
           <Route path="/settings" element={<Settings />} />

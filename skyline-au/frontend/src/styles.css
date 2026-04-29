@@ -65,7 +65,7 @@ body {
   position: relative;
   background: var(--grad-day);
   transition: background 0.6s ease;
-  padding-bottom: 90px;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
   overflow: hidden;
 }
 .app[data-mood='night'] {
@@ -896,7 +896,7 @@ nav.tabbar {
 
 .install {
   position: fixed;
-  bottom: 80px;
+  bottom: calc(72px + env(safe-area-inset-bottom));
   left: 12px;
   right: 12px;
   max-width: 456px;

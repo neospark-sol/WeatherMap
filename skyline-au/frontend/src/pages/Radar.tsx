@@ -73,6 +73,11 @@ function AnimatedRadarOverlay({
     return () => clearInterval(id);
   }, [playing, frames.length]);
 
+  useEffect(() => {
+    if (!frames.length) return;
+    setIdx((i) => Math.min(i, frames.length - 1));
+  }, [frames.length]);
+
   return null;
 }
 
@@ -106,9 +111,14 @@ export function Radar() {
       const res = await fetch(WEATHER_MAPS_URL);
       if (!res.ok) throw new Error('Radar feed unavailable');
       const j = (await res.json()) as RvResponse;
-      const past = j.radar?.past ?? [];
-      const nowcast = j.radar?.nowcast ?? [];
-      setMeta({ host: j.host, frames: [...past, ...nowcast], generated: j.generated });
+      if (!j.host || typeof j.host !== 'string') throw new Error('Invalid radar feed (no host)');
+      const past = Array.isArray(j.radar?.past) ? j.radar!.past! : [];
+      const nowcast = Array.isArray(j.radar?.nowcast) ? j.radar!.nowcast! : [];
+      const frames = [...past, ...nowcast].filter(
+        (f): f is RvFrame => f && typeof f.path === 'string' && typeof f.time === 'number'
+      );
+      if (!frames.length) throw new Error('No radar frames in feed');
+      setMeta({ host: j.host.replace(/\/$/, ''), frames, generated: j.generated });
       setLoadErr(null);
     } catch (e) {
       setLoadErr((e as Error).message);
