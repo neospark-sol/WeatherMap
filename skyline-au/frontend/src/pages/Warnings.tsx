@@ -29,7 +29,7 @@ export function Warnings({ refreshKey }: { refreshKey: number }) {
           <div className="sub">
             {alertsSupported
               ? `${location.name} and surrounding areas look clear in the national feed.`
-              : `Government warnings for ${location.country} are not wired in this app yet. Your forecast on Today is still live (Open‑Meteo). AU uses BOM; US uses NWS.`}
+              : `Official hazard feeds for ${location.country} are not available in this app yet. Your Today tab still shows a live forecast.`}
           </div>
         </div>
       )}

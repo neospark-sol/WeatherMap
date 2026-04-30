@@ -29,23 +29,17 @@ export function Settings() {
         </div>
         <div className="setting-row">
           <div>
-            <div className="lbl">Data sources</div>
-            <div className="desc">
-              Forecast &amp; search: Open-Meteo (no key). AU official warnings: BoM FTP/HTTP XML caps (e.g. IDZ00054
-              NSW). US alerts: api.weather.gov. Global radar loop: RainViewer public tiles (personal/educational use —
-              see rainviewer.com/api).
-            </div>
+            <div className="lbl">Data</div>
+            <div className="desc">Live forecasts and radar from public services. Warnings use official feeds where wired.</div>
           </div>
           <div style={{ fontSize: 13, color: 'var(--good)' }}>● Live</div>
         </div>
       </section>
       <section className="card" style={{ textAlign: 'center' }}>
         <div style={{ fontSize: 12, color: 'var(--text-faint)', lineHeight: 1.5 }}>
-          Built with original data sources.
+          WeatherMap — for personal use.
           <br />
-          Forecast: Open-Meteo · AU warnings: BoM · US alerts: NWS · Radar mosaic: RainViewer
-          <br />
-          Not affiliated with Weatherzone.
+          Not affiliated with third-party weather brands.
         </div>
       </section>
     </div>

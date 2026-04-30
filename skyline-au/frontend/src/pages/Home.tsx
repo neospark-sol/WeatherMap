@@ -161,10 +161,8 @@ export function Home({ refreshKey, setMood }: { refreshKey: number; setMood: (m:
       </section>
 
       <section className="card" style={{ textAlign: 'center', color: 'var(--text-faint)', fontSize: 11.5 }}>
-        Forecast: Open-Meteo worldwide · AU: BOM · US: National Weather Service
-        <br />
+        <span style={{ opacity: 0.85 }}>Updated </span>
         <span style={{ opacity: 0.7 }}>
-          Updated{' '}
           {new Date(current.observedAt).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })}
         </span>
       </section>

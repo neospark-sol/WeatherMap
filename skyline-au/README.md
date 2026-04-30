@@ -43,4 +43,6 @@ Debug APK path after build: `frontend/android/app/build/outputs/apk/debug/app-de
 
 **Install on device:** enable installing apps from unknown sources (or use ADB `adb install`), open the APK, install. Debug builds are for testing only; for Play Store use a signed release (`./gradlew assembleRelease` with your keystore).
 
+**Operators:** The shipped UI hides on-map tile attribution. Public tile providers (e.g. OSM, CARTO, RainViewer) often require visible credit in their terms—evaluate compliance for your use case (self-hosted tiles, licensed basemaps, or in-app credits if needed).
+
 Not affiliated with third-party weather brands.

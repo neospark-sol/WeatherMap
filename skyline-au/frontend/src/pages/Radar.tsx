@@ -47,8 +47,7 @@ function AnimatedRadarOverlay({
         maxNativeZoom: 7,
         maxZoom: 12,
         zIndex: 450,
-        attribution:
-          'Radar tiles <a href="https://www.rainviewer.com/" target="_blank" rel="noopener">RainViewer</a>'
+        attribution: ''
       });
       lyr.addTo(map);
       layerRef.current = lyr;
@@ -133,18 +132,11 @@ export function Radar() {
     return () => clearInterval(iv);
   }, [load]);
 
-  const basemap = useMemo(
+  const basemapUrl = useMemo(
     () =>
       theme === 'dark'
-        ? {
-            url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
-          }
-        : {
-            url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          },
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     [theme]
   );
 
@@ -171,8 +163,9 @@ export function Radar() {
           className="radar-map"
           scrollWheelZoom
           zoomControl
+          attributionControl={false}
         >
-          <TileLayer attribution={basemap.attribution} url={basemap.url} maxZoom={19} />
+          <TileLayer url={basemapUrl} maxZoom={19} attribution="" />
           <MapRecenter lat={location.lat} lon={location.lon} />
           {meta && meta.frames.length > 0 && (
             <AnimatedRadarOverlay
@@ -205,9 +198,6 @@ export function Radar() {
                   <>Loading frames…</>
                 )}
               </div>
-              <a className="radar-credit" href="https://www.rainviewer.com/" target="_blank" rel="noreferrer">
-                Radar: RainViewer
-              </a>
             </div>
           </div>
         )}
@@ -216,16 +206,8 @@ export function Radar() {
       <section className="card radar-legend-card">
         <div className="lbl">Reading the map</div>
         <div className="desc radar-legend-desc">
-          Colours show composite radar reflectivity worldwide (coverage varies by region). The loop steps through recent
-          snapshots so you can see motion. For official Australian warnings use the Warnings tab (BoM feed).
-          <br />
-          <br />
-          Maps use{' '}
-          <a href="https://leafletjs.com/" target="_blank" rel="noreferrer">
-            Leaflet
-          </a>{' '}
-          (open-source mapping library; no ads injected by the stack). Basemap: OpenStreetMap / CARTO; radar: RainViewer.
-          Required attribution appears in the map corner.
+          Colours show rain intensity from weather radar where coverage exists. The loop plays recent frames so you
+          can see movement. Official warnings stay on the Warnings tab.
         </div>
       </section>
     </div>
