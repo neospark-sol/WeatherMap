@@ -46,7 +46,9 @@ function AnimatedRadarOverlay({
         opacity: 0.82,
         maxNativeZoom: 7,
         maxZoom: 12,
-        zIndex: 450
+        zIndex: 450,
+        attribution:
+          'Radar tiles <a href="https://www.rainviewer.com/" target="_blank" rel="noopener">RainViewer</a>'
       });
       lyr.addTo(map);
       layerRef.current = lyr;
@@ -216,6 +218,14 @@ export function Radar() {
         <div className="desc radar-legend-desc">
           Colours show composite radar reflectivity worldwide (coverage varies by region). The loop steps through recent
           snapshots so you can see motion. For official Australian warnings use the Warnings tab (BoM feed).
+          <br />
+          <br />
+          Maps use{' '}
+          <a href="https://leafletjs.com/" target="_blank" rel="noreferrer">
+            Leaflet
+          </a>{' '}
+          (open-source mapping library; no ads injected by the stack). Basemap: OpenStreetMap / CARTO; radar: RainViewer.
+          Required attribution appears in the map corner.
         </div>
       </section>
     </div>

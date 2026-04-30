@@ -659,6 +659,40 @@ nav.tabbar {
   background: var(--bg-depth, #0b1020);
   font-family: inherit;
 }
+/* Attribution: single readable credit strip (not debug text) */
+.radar-map .leaflet-control-attribution {
+  font-size: 9.5px;
+  line-height: 1.35;
+  max-width: calc(100% - 4px);
+  padding: 5px 10px;
+  margin: 0 !important;
+  border-radius: 0 8px 0 0;
+  border: none;
+  background: rgba(11, 16, 32, 0.9);
+  color: var(--text-dim);
+  box-sizing: border-box;
+  box-shadow: none;
+}
+[data-theme='light'] .radar-map .leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.94);
+  color: #444;
+}
+.radar-map .leaflet-control-attribution a {
+  color: var(--accent-2);
+}
+.radar-map .leaflet-control-zoom {
+  border: none !important;
+  margin: 10px 10px 0 0 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.radar-map .leaflet-control-zoom a {
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  font-size: 18px !important;
+}
 .radar-hud {
   position: absolute;
   left: 0;

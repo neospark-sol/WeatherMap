@@ -1,0 +1,17 @@
+---
+description: Prefer vetted, widely used dependencies; avoid obscure or typosquatted packages.
+alwaysApply: true
+---
+
+# Trusted dependencies and supply-chain care
+
+When adding **npm/pip/cargo/go** dependencies, libraries from CDNs, or native wrappers:
+
+1. **Default to mainstream choices** with a long track record and many dependents (e.g. for interactive maps: **Leaflet** + **react-leaflet**, not random `*-map-widget` packages unless there is a clear reason and review).
+2. **Verify the package name** on the official registry (typo-squatting is common). Prefer packages linked from the project’s **official docs** (e.g. [leafletjs.com](https://leafletjs.com/), [capacitorjs.com](https://capacitorjs.com/)).
+3. **Check signals**: recent releases, issue activity, npm/GitHub stars/downloads order-of-magnitude, whether the repo matches the published package.
+4. **Pin versions** in lockfiles; avoid copy-pasting script tags from unverified tutorials without a fixed version or SRI where applicable.
+5. **Do not confuse** visiting a library’s **official website** (e.g. a modal or statement on the author’s homepage) with **malware or ads inside your app** — inspect only what your bundle loads (lockfile + `npm ls` + runtime network).
+6. **Document** niche or newer deps in README or PR: why this package, license, and official source URL.
+
+If a user questions safety, **cite** the registry page + official docs and suggest `npm audit` / advisory DB checks rather than replacing working stack with unknown alternatives.
