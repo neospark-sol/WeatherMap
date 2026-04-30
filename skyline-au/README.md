@@ -27,4 +27,19 @@ Set `PROVIDER=live` (default in Docker) for real data. Use `PROVIDER=mock` only 
 - US alerts: api.weather.gov  
 - Radar mosaic (browser): RainViewer public API  
 
+## Android APK (Capacitor)
+
+The packaged app loads the **live** PWA from Railway (default URL in `frontend/capacitor.config.ts`). A recent **debug** build is in `/releases/WeatherMap-debug.apk` at repo root for sideloading.
+
+**Build yourself** (macOS example):
+
+1. Install **JDK 17** and Android **command-line tools**; set `ANDROID_HOME` to the SDK root (e.g. Homebrew: `/opt/homebrew/share/android-commandlinetools`) and accept licenses: `sdkmanager --licenses`.
+2. Optional: `export WEATHERMAP_SERVER_URL=https://your-host.up.railway.app` before sync.
+3. From `frontend/`: `npm ci && npm run android:build`  
+   (uses `JAVA_HOME` for Java 17; e.g. `export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home`).
+
+Debug APK path after build: `frontend/android/app/build/outputs/apk/debug/app-debug.apk`.
+
+**Install on device:** enable installing apps from unknown sources (or use ADB `adb install`), open the APK, install. Debug builds are for testing only; for Play Store use a signed release (`./gradlew assembleRelease` with your keystore).
+
 Not affiliated with third-party weather brands.
