@@ -1,6 +1,6 @@
 # WeatherMap
 
-Mobile-first weather PWA: React + Vite + TypeScript, Express backend (Open‑Meteo forecasts, AU BoM warnings XML, US NWS alerts, RainViewer radar in the client). Installable PWA with offline caching for shell and API.
+Mobile-first weather PWA: React + Vite + TypeScript, Express backend (Open‑Meteo forecasts, AU BoM warnings XML, US NWS alerts, AU radar images proxied from BoM anonymous FTP). Installable PWA with offline caching for shell and API.
 
 ## Run locally
 
@@ -25,7 +25,7 @@ Set `PROVIDER=live` (default in Docker) for real data. Use `PROVIDER=mock` only 
 - Forecast & geocoding: Open‑Meteo  
 - AU warnings: Bureau of Meteorology product XML (`fwo/IDZ…`)  
 - US alerts: api.weather.gov  
-- Radar mosaic (browser): RainViewer public API  
+- Radar: **Australia** — BoM `anon/gen/radar` PNG timesteps (`IDR*.T.*`) via backend `GET /api/radar/bom/frames` and `GET /api/radar/bom/png/:file`; map has **no third‑party basemap** (grid backdrop only). Other countries: placeholder until additional official feeds are integrated.
 
 ## Android APK (Capacitor)
 
@@ -43,6 +43,6 @@ Debug APK path after build: `frontend/android/app/build/outputs/apk/debug/app-de
 
 **Install on device:** enable installing apps from unknown sources (or use ADB `adb install`), open the APK, install. Debug builds are for testing only; for Play Store use a signed release (`./gradlew assembleRelease` with your keystore).
 
-**Operators:** The shipped UI hides on-map tile attribution. Public tile providers (e.g. OSM, CARTO, RainViewer) often require visible credit in their terms—evaluate compliance for your use case (self-hosted tiles, licensed basemaps, or in-app credits if needed).
+**Operators:** The radar map omits basemap tiles (no OSM/Carto/RainViewer). AU layers use BoM anonymous FTP products; check current **[copyright and use terms](https://www.bom.gov.au/other/copyright)** for redistribution and commercial vs non‑commercial use. Hiding attribution in the UI does not replace compliance with data licences.
 
 Not affiliated with third-party weather brands.

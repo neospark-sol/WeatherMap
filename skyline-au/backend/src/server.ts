@@ -6,6 +6,12 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import type { WarningQuery } from './types.js';
 import { buildProvider } from './providers/index.js';
+import {
+  boundsForSite,
+  fetchBomRadarPng,
+  listBomRadarFrames,
+  radarSiteForAuState
+} from './providers/bomRadarFtp.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -114,6 +120,42 @@ app.get('/api/warnings', async (req, res) => {
     res.json({ warnings: data });
   } catch (e) {
     res.status(500).json({ error: (e as Error).message });
+  }
+});
+
+/** BoM anonymous FTP radar (AU). Proxied so browsers do not need ftp://. */
+app.get('/api/radar/bom/frames', async (req, res) => {
+  try {
+    let site = String(req.query.site ?? '').toUpperCase();
+    if (!site && req.query.state != null) {
+      site = radarSiteForAuState(String(req.query.state));
+    }
+    if (!site) site = 'IDR714';
+    if (!/^IDR\d{3}$/.test(site)) {
+      res.status(400).json({ error: 'invalid site' });
+      return;
+    }
+    const limRaw = Number(req.query.limit);
+    const limit = Number.isFinite(limRaw) ? Math.min(48, Math.max(4, Math.floor(limRaw))) : 24;
+    const cacheKey = `bomrf:${site}:${limit}`;
+    const frames = await cached(cacheKey, 45, () => listBomRadarFrames(site, limit));
+    const bounds = boundsForSite(site);
+    res.json({ site, bounds, frames });
+  } catch (e) {
+    res.status(500).json({ error: (e as Error).message });
+  }
+});
+
+app.get('/api/radar/bom/png/:file', async (req, res) => {
+  try {
+    const file = String(req.params.file);
+    const cacheKey = `bomp:${file}`;
+    const buf = await cached(cacheKey, 40, () => fetchBomRadarPng(file));
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=40');
+    res.send(buf);
+  } catch (e) {
+    res.status(404).json({ error: (e as Error).message });
   }
 });
 

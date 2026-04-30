@@ -33,5 +33,13 @@ export const api = {
       lon: String(loc.lon)
     });
     return get<{ warnings: WarningItem[] }>(`/warnings?${p}`).then((r) => r.warnings);
+  },
+  bomRadarFrames: (state?: string) => {
+    const q = state ? `?state=${encodeURIComponent(state)}` : '';
+    return get<{
+      site: string;
+      bounds: [[number, number], [number, number]] | null;
+      frames: { file: string; time: string }[];
+    }>(`/radar/bom/frames${q}`);
   }
 };

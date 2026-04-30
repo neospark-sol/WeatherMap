@@ -1,155 +1,111 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import L from 'leaflet';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { MapContainer, ImageOverlay, useMap } from 'react-leaflet';
 import { useApp } from '../app/AppContext';
+import { api } from '../services/api';
 import 'leaflet/dist/leaflet.css';
+import '../radar-leaflet-overrides.css';
 
-const WEATHER_MAPS_URL = 'https://api.rainviewer.com/public/weather-maps.json';
+type BomFrame = { file: string; time: string };
 
-type RvFrame = { time: number; path: string };
-
-type RvResponse = {
-  host: string;
-  generated?: number;
-  radar?: { past?: RvFrame[]; nowcast?: RvFrame[] };
-};
-
-function MapRecenter({ lat, lon }: { lat: number; lon: number }) {
+function MapRecenter({ lat, lon, zoom }: { lat: number; lon: number; zoom: number }) {
   const map = useMap();
   useEffect(() => {
-    map.setView([lat, lon], Math.max(map.getZoom(), 5), { animate: true, duration: 0.35 });
-  }, [lat, lon, map]);
+    map.setView([lat, lon], Math.max(map.getZoom(), zoom), { animate: true, duration: 0.35 });
+  }, [lat, lon, zoom, map]);
   return null;
 }
 
-function AnimatedRadarOverlay({
-  host,
-  frames,
-  playing,
-  onFrame
-}: {
-  host: string;
-  frames: RvFrame[];
-  playing: boolean;
-  onFrame: (idx: number, unixSec: number) => void;
-}) {
-  const map = useMap();
-  const layerRef = useRef<L.TileLayer | null>(null);
-  const [idx, setIdx] = useState(() => Math.max(0, frames.length - 1));
-
-  useEffect(() => {
-    if (!frames.length) return;
-    const path = frames[idx]!.path;
-    const url = `${host}${path}/256/{z}/{x}/{y}/2/1_1.png`;
-    if (!layerRef.current) {
-      const lyr = L.tileLayer(url, {
-        opacity: 0.82,
-        maxNativeZoom: 7,
-        maxZoom: 12,
-        zIndex: 450,
-        attribution: ''
-      });
-      lyr.addTo(map);
-      layerRef.current = lyr;
-    } else {
-      layerRef.current.setUrl(url);
-    }
-    onFrame(idx, frames[idx]!.time);
-  }, [map, host, frames, idx, onFrame]);
-
-  useEffect(() => {
-    return () => {
-      if (layerRef.current) {
-        map.removeLayer(layerRef.current);
-        layerRef.current = null;
-      }
-    };
-  }, [map]);
-
-  useEffect(() => {
-    if (!playing || frames.length < 2) return;
-    const id = window.setInterval(() => {
-      setIdx((i) => (i + 1) % frames.length);
-    }, 520);
-    return () => clearInterval(id);
-  }, [playing, frames.length]);
-
-  useEffect(() => {
-    if (!frames.length) return;
-    setIdx((i) => Math.min(i, frames.length - 1));
-  }, [frames.length]);
-
-  return null;
-}
-
-function formatFrameTime(unixSec: number): string {
+function formatFrameTime(isoUtc: string): string {
   try {
+    const d = new Date(isoUtc);
     return (
       new Intl.DateTimeFormat(undefined, {
         dateStyle: 'medium',
         timeStyle: 'short',
         timeZone: 'UTC'
-      }).format(new Date(unixSec * 1000)) + ' UTC'
+      }).format(d) + ' UTC'
     );
   } catch {
-    return new Date(unixSec * 1000).toISOString();
+    return isoUtc;
   }
 }
 
 export function Radar() {
   const { location, theme } = useApp();
-  const [meta, setMeta] = useState<{ host: string; frames: RvFrame[]; generated?: number } | null>(null);
+  const isAu = location.country.toUpperCase() === 'AU';
+
+  const [bomMeta, setBomMeta] = useState<{
+    site: string;
+    bounds: [[number, number], [number, number]] | null;
+    frames: BomFrame[];
+  } | null>(null);
   const [loadErr, setLoadErr] = useState<string | null>(null);
   const [playing, setPlaying] = useState(true);
-  const [hud, setHud] = useState({ idx: 0, unix: 0 });
+  const [idx, setIdx] = useState(0);
 
-  const onFrame = useCallback((idx: number, unixSec: number) => {
-    setHud((h) => (h.idx === idx && h.unix === unixSec ? h : { idx, unix: unixSec }));
-  }, []);
-
-  const load = useCallback(async () => {
+  const loadBom = useCallback(async () => {
+    if (!isAu) return;
     try {
-      const res = await fetch(WEATHER_MAPS_URL);
-      if (!res.ok) throw new Error('Radar feed unavailable');
-      const j = (await res.json()) as RvResponse;
-      if (!j.host || typeof j.host !== 'string') throw new Error('Invalid radar feed (no host)');
-      const past = Array.isArray(j.radar?.past) ? j.radar!.past! : [];
-      const nowcast = Array.isArray(j.radar?.nowcast) ? j.radar!.nowcast! : [];
-      const frames = [...past, ...nowcast].filter(
-        (f): f is RvFrame => f && typeof f.path === 'string' && typeof f.time === 'number'
-      );
-      if (!frames.length) throw new Error('No radar frames in feed');
-      setMeta({ host: j.host.replace(/\/$/, ''), frames, generated: j.generated });
+      const data = await api.bomRadarFrames(location.state || undefined);
+      if (!data.frames.length) throw new Error('No radar frames available');
+      setBomMeta(data);
       setLoadErr(null);
+      setIdx((i) => Math.min(i, Math.max(0, data.frames.length - 1)));
     } catch (e) {
       setLoadErr((e as Error).message);
+      setBomMeta(null);
     }
-  }, []);
+  }, [isAu, location.state]);
 
   useEffect(() => {
-    void load();
-    const iv = window.setInterval(() => void load(), 5 * 60_000);
+    void loadBom();
+    if (!isAu) return;
+    const iv = window.setInterval(() => void loadBom(), 3 * 60_000);
     return () => clearInterval(iv);
-  }, [load]);
+  }, [loadBom, isAu]);
 
-  const basemapUrl = useMemo(
-    () =>
-      theme === 'dark'
-        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  useEffect(() => {
+    if (!bomMeta?.frames.length) return;
+    if (!playing || bomMeta.frames.length < 2) return;
+    const id = window.setInterval(() => {
+      setIdx((i) => (i + 1) % bomMeta.frames.length);
+    }, 520);
+    return () => clearInterval(id);
+  }, [playing, bomMeta?.frames.length]);
+
+  useEffect(() => {
+    if (!bomMeta?.frames.length) return;
+    setIdx((i) => Math.min(i, bomMeta.frames.length - 1));
+  }, [bomMeta?.frames]);
+
+  const mapZoom = isAu ? 7 : 5;
+  const nFrames = bomMeta?.frames.length ?? 0;
+  const currentFile = bomMeta?.frames[idx]?.file;
+  const overlayUrl = currentFile ? `/api/radar/bom/png/${encodeURIComponent(currentFile)}` : '';
+  const frameTime = bomMeta?.frames[idx]?.time;
+
+  const gridNote = useMemo(
+    () => (theme === 'dark' ? 'radar-map radar-map--dark' : 'radar-map radar-map--light'),
     [theme]
   );
-
-  const nFrames = meta?.frames.length ?? 0;
 
   return (
     <div className="fade-in radar-page">
       <section className="radar-head">
         <div className="label">Precipitation radar</div>
         <div className="radar-sub">
-          {location.name} — past ~2h plus short nowcast where available. Map centers on your selected city.
+          {isAu ? (
+            <>
+              {location.name} — radar loop for your state. No street map; colours are reflectivity only.
+            </>
+          ) : (
+            <>
+              Official single-source radar is wired for Australia. Outside AU the map shows your location only;
+              more regions can be added over time.
+            </>
+          )}
         </div>
-        {loadErr && (
+        {loadErr && isAu && (
           <div className="radar-err" role="alert">
             {loadErr}
           </div>
@@ -159,26 +115,19 @@ export function Radar() {
       <div className="radar-map-wrap">
         <MapContainer
           center={[location.lat, location.lon]}
-          zoom={6}
-          className="radar-map"
+          zoom={mapZoom}
+          className={gridNote}
           scrollWheelZoom
-          zoomControl
+          zoomControl={false}
           attributionControl={false}
         >
-          <TileLayer url={basemapUrl} maxZoom={19} attribution="" />
-          <MapRecenter lat={location.lat} lon={location.lon} />
-          {meta && meta.frames.length > 0 && (
-            <AnimatedRadarOverlay
-              key={meta.generated ?? meta.frames[meta.frames.length - 1]!.time}
-              host={meta.host}
-              frames={meta.frames}
-              playing={playing}
-              onFrame={onFrame}
-            />
+          <MapRecenter lat={location.lat} lon={location.lon} zoom={mapZoom} />
+          {isAu && overlayUrl && bomMeta?.bounds && (
+            <ImageOverlay key={currentFile} url={overlayUrl} bounds={bomMeta.bounds} opacity={0.86} interactive={false} />
           )}
         </MapContainer>
 
-        {meta && meta.frames.length > 0 && (
+        {isAu && bomMeta && nFrames > 0 && (
           <div className="radar-hud">
             <button
               type="button"
@@ -190,12 +139,12 @@ export function Radar() {
             </button>
             <div className="radar-meta">
               <div className="radar-time-line">
-                {hud.unix ? (
+                {frameTime ? (
                   <>
-                    Frame {hud.idx + 1}/{nFrames} · {formatFrameTime(hud.unix)}
+                    Frame {idx + 1}/{nFrames} · {formatFrameTime(frameTime)} · {bomMeta.site}
                   </>
                 ) : (
-                  <>Loading frames…</>
+                  <>Loading…</>
                 )}
               </div>
             </div>
@@ -206,8 +155,9 @@ export function Radar() {
       <section className="card radar-legend-card">
         <div className="lbl">Reading the map</div>
         <div className="desc radar-legend-desc">
-          Colours show rain intensity from weather radar where coverage exists. The loop plays recent frames so you
-          can see movement. Official warnings stay on the Warnings tab.
+          {isAu
+            ? 'Shades show rainfall from official BoM radar PNG timesteps (proxied for the app). The loop uses recent frames. Warnings stay on the Warnings tab.'
+            : 'Choose an Australian location to view the radar loop, or check back when your region is supported.'}
         </div>
       </section>
     </div>

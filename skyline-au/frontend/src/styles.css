@@ -656,8 +656,25 @@ nav.tabbar {
 .radar-map .leaflet-container {
   width: 100%;
   height: 100%;
-  background: var(--bg-depth, #0b1020);
+  background-color: var(--bg-depth, #0b1020);
   font-family: inherit;
+}
+/* Option C: no basemap — subtle vector-style backdrop only */
+.radar-map--dark .leaflet-container {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(ellipse 120% 80% at 50% 30%, rgba(56, 110, 168, 0.22), transparent 55%);
+  background-size: 48px 48px, 48px 48px, 100% 100%;
+  background-color: var(--bg-depth, #0b1020);
+}
+.radar-map--light .leaflet-container {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    radial-gradient(ellipse 120% 80% at 50% 28%, rgba(120, 160, 210, 0.18), transparent 55%);
+  background-size: 44px 44px, 44px 44px, 100% 100%;
+  background-color: var(--bg-depth, #f4f6fb);
 }
 /* No attribution strip on radar (clean UI); zoom only */
 .radar-map .leaflet-control-attribution {

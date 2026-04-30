@@ -1,0 +1,17 @@
+/* Must load after leaflet.css (import from Radar.tsx) so these win cascade. */
+.radar-map.leaflet-container .leaflet-control-attribution,
+.radar-map .leaflet-control-attribution {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: none !important;
+  pointer-events: none !important;
+}
+
+.radar-map .leaflet-attribution-flag {
+  display: none !important;
+}
