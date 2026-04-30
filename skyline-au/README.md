@@ -38,6 +38,7 @@ The packaged app loads the **live** PWA from Railway (default URL in `frontend/c
 3. From `frontend/`: `npm ci && npm run android:build`  
    (uses `JAVA_HOME` for Java 17; e.g. `export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home`).
 
+**Icons:** Launcher and splash images are generated from the same **`public/icon-512.png`** as the PWA (`npm run android:icons`, requires **Python 3 + Pillow**: `pip3 install Pillow`).
 Debug APK path after build: `frontend/android/app/build/outputs/apk/debug/app-debug.apk`.
 
 **Install on device:** enable installing apps from unknown sources (or use ADB `adb install`), open the APK, install. Debug builds are for testing only; for Play Store use a signed release (`./gradlew assembleRelease` with your keystore).
